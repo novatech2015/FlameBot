@@ -1,0 +1,53 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package finaleddrobot.resources;
+
+import finaleddrobot.controllers.PS3Controller;
+import finaleddrobot.packages.Drill;
+import finaleddrobot.packages.Hatch;
+import finaleddrobot.sensors.Arduino;
+import finaleddrobot.sensors.BMP180;
+import finaleddrobot.sensors.HIH6130;
+import finaleddrobot.sensors.PN532;
+import finaleddrobot.sensors.TMP102;
+import finaleddrobot.utility.LiveFeed;
+import finaleddrobot.utility.MiFareStringBuilder;
+import finaleddrobot.utility.TerminalExecutor;
+import java.io.IOException;
+
+/**
+ *
+ * @author mallory
+ */
+public class Resources {
+    
+    public static TerminalExecutor m_exec;
+    public static TMP102 m_tmp102;
+    public static HIH6130 m_hih6130;
+    public static BMP180 m_bmp180;
+    public static Drill m_drill;
+    public static Hatch m_hatch;
+    public static LiveFeed m_liveFeed;
+    public static PS3Controller m_controller;
+    public static Arduino m_arduino;
+    public static PN532 m_pn532;
+    public static MiFareStringBuilder m_mifareStringBuilder;
+    
+    public static void init() throws IOException{
+        m_exec = new TerminalExecutor();
+        m_tmp102 = new TMP102();
+        m_hih6130 = new HIH6130();
+        m_bmp180 = new BMP180();
+        m_drill = new Drill(-9001, -9001, -9001, -9001, -9001, -9001);
+        m_hatch = new Hatch(-9001, -9001, -9001, -9001);
+        m_liveFeed = new LiveFeed();
+        m_liveFeed.start();
+        m_controller = new PS3Controller();
+        m_arduino = new Arduino("/dev/ttyUSB0");
+        m_pn532 = new PN532();
+        m_mifareStringBuilder = new MiFareStringBuilder();
+    }
+}
