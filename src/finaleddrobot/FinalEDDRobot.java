@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class FinalEDDRobot{
 
     public static byte autophase = 0;	
+    public static String lastValidString = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
 
     public static void main(String[] args) throws IOException {
 
@@ -29,7 +30,13 @@ public class FinalEDDRobot{
         }
         
         while(true){
-            Resources.m_controller.update();
+            if(Resources.m_missionControl.getIncoming().getRawData() == null){
+            }else{
+                String tempString = Resources.m_missionControl.getIncoming().getRawData();
+                lastValidString = tempString.substring(0, tempString.length()-1);
+                Resources.m_controller.update(lastValidString);
+            }
+            
             if(Resources.isEnabled){
                 if(Resources.isTeleopEnabled){
                     UserPhase.update();

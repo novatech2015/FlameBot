@@ -6,6 +6,7 @@
 package finaleddrobot.resources;
 
 import finaleddrobot.controllers.PS3Controller;
+import finaleddrobot.controllers.SerialPS3Controller;
 import finaleddrobot.packages.Drill;
 import finaleddrobot.packages.Hatch;
 import finaleddrobot.sensors.Arduino;
@@ -17,6 +18,7 @@ import finaleddrobot.utility.LiveFeed;
 import finaleddrobot.utility.MiFareStringBuilder;
 import finaleddrobot.utility.TerminalExecutor;
 import java.io.IOException;
+import missioncontrol.sockets.Socket;
 
 /**
  *
@@ -33,7 +35,8 @@ public class Resources {
     public static Drill m_drill;
     public static Hatch m_hatch;
     public static LiveFeed m_liveFeed;
-    public static PS3Controller m_controller;
+    public static Socket m_missionControl;
+    public static SerialPS3Controller m_controller;
     public static Arduino m_arduino;
     public static PN532 m_pn532;
     public static MiFareStringBuilder m_mifareStringBuilder;
@@ -47,7 +50,8 @@ public class Resources {
 //        m_hatch = new Hatch(-9001, -9001, -9001, -9001);
 //        m_liveFeed = new LiveFeed();
 //        m_liveFeed.start();
-        m_controller = new PS3Controller();
+        m_missionControl = new Socket("127.0.0.1", 9001);
+        m_controller = new SerialPS3Controller();
 //        m_arduino = new Arduino("/dev/ttyUSB0");
 //        m_pn532 = new PN532();
 //        m_mifareStringBuilder = new MiFareStringBuilder();
