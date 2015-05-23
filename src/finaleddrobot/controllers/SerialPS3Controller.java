@@ -14,9 +14,29 @@ import net.java.games.input.ControllerEnvironment;
  *
  * @author mallory
  */
-public class PS3Controller {
+public class SerialPS3Controller {
     
     private Controller controller;
+    private double leftXAxis = 0.0;
+    private double rightXAxis = 0.0;
+    private double leftYAxis = 0.0;
+    private double rightYAxis = 0.0;
+    private boolean L1 = false;
+    private boolean R1 = false;
+    private boolean L2 = false;
+    private boolean R2 = false;
+    private boolean StartButton = false;
+    private boolean SelectButton = false;
+    private boolean CircleButton = false;
+    private boolean XButton = false;
+    private boolean TriangleButton = false;
+    private boolean SquareButton = false;
+    private boolean LeftJoyButton = false;
+    private boolean RightJoyButton = false;
+    private boolean DLeft = false;
+    private boolean DRight = false;
+    private boolean DUp = false;
+    private boolean DDown = false;
     private boolean lastButtonState_L1 = false;
     private boolean lastButtonState_R1 = false;
     private boolean lastButtonState_L2 = false;
@@ -34,89 +54,87 @@ public class PS3Controller {
     private boolean lastButtonState_DUp = false;
     private boolean lastButtonState_DDown = false;
     
-    public PS3Controller(){
-        ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
-        controller = ce.getControllers()[0];        
+    public SerialPS3Controller(){       
     }
     
     public double getLeftXAxis(){
-        return controller.getComponent(Identifier.Axis.X).getPollData();
+        return leftXAxis;
     }
     
     public double getRightXAxis(){
-        return controller.getComponent(Identifier.Axis.Z).getPollData();
+        return rightXAxis;
     }    
     
     public double getLeftYAxis(){
-        return -controller.getComponent(Identifier.Axis.Y).getPollData();
+        return leftYAxis;
     }
     
     public double getRightYAxis(){
-        return -controller.getComponent(Identifier.Axis.RZ).getPollData();
+        return rightYAxis;
     }    
     
     public boolean getL1(){
-        return controller.getComponent(Identifier.Button.BASE5).getPollData() == 1;
+        return L1;
     }
     
     public boolean getR1(){
-        return controller.getComponent(Identifier.Button.BASE6).getPollData() == 1;
+        return R1;
     }
     
     public boolean getL2(){
-        return controller.getComponent(Identifier.Button.BASE3).getPollData() == 1;
+        return L2;
     }
     
     public boolean getR2(){
-        return controller.getComponent(Identifier.Button.BASE4).getPollData() == 1;
+        return R2;
     }
     
     public boolean getStartButton(){
-        return controller.getComponent(Identifier.Button.TOP).getPollData() == 1;
+        return StartButton;
     }
     
     public boolean getSelectButton(){
-        return controller.getComponent(Identifier.Button.TRIGGER).getPollData() == 1;
+        return SelectButton;
     }
     
     public boolean getCircleButton(){
-        return controller.getComponents()[13].getPollData()== 1;
+        return CircleButton;
     }
     
     public boolean getXButton(){
-        return controller.getComponents()[14].getPollData()== 1;
+        return XButton;
     }
     
     public boolean getTriangleButton(){
-        return controller.getComponent(Identifier.Button.UNKNOWN).getPollData() == 1;
+        return TriangleButton;
     }
     
     public boolean getSquareButton(){
-        return controller.getComponent(Identifier.Button.DEAD).getPollData() == 1;
+        return SquareButton;
     }
     
     public boolean getLeftJoyButton(){
-        return controller.getComponent(Identifier.Button.THUMB).getPollData() == 1;
+        return LeftJoyButton;
     }
     
     public boolean getRightJoyButton(){
-        return controller.getComponent(Identifier.Button.THUMB2).getPollData() == 1;
+        return RightJoyButton;
     }
     
     public boolean getDLeft(){
-        return controller.getComponent(Identifier.Button.BASE2).getPollData() == 1;
+        return DLeft;
     }
     
     public boolean getDRight(){
-        return controller.getComponent(Identifier.Button.PINKIE).getPollData() == 1;
+        return DRight;
     }
     
     public boolean getDUp(){
-        return controller.getComponent(Identifier.Button.TOP2).getPollData() == 1;
+        return DUp;
     }
     
     public boolean getDDown(){
-        return controller.getComponent(Identifier.Button.BASE).getPollData() == 1;
+        return DDown;
     }
     
     public boolean getL1Pressed(){
@@ -215,8 +233,32 @@ public class PS3Controller {
         return pressed;
     }
     
-    public boolean update(){
-        return controller.poll();
+    public void update(String serializedString){
+        deserialize(serializedString);
+    }
+    
+    private void deserialize(String serializedString){
+        String[] controllerInputs = serializedString.split("[,]");
+        leftXAxis = Double.parseDouble(controllerInputs[0]);
+        rightXAxis = Double.parseDouble(controllerInputs[1]);
+        leftYAxis = Double.parseDouble(controllerInputs[2]);
+        rightYAxis = Double.parseDouble(controllerInputs[3]);
+        L1 = Integer.parseInt(controllerInputs[4]) == 1;
+        R1 = Integer.parseInt(controllerInputs[5]) == 1;
+        L2 = Integer.parseInt(controllerInputs[6]) == 1;
+        R2 = Integer.parseInt(controllerInputs[7]) == 1;
+        StartButton = Integer.parseInt(controllerInputs[8]) == 1;
+        SelectButton = Integer.parseInt(controllerInputs[9]) == 1;
+        CircleButton = Integer.parseInt(controllerInputs[10]) == 1;
+        XButton = Integer.parseInt(controllerInputs[11]) == 1;
+        TriangleButton = Integer.parseInt(controllerInputs[12]) == 1;
+        SquareButton = Integer.parseInt(controllerInputs[13]) == 1;
+        LeftJoyButton = Integer.parseInt(controllerInputs[14]) == 1;
+        RightJoyButton = Integer.parseInt(controllerInputs[15]) == 1;
+        DLeft = Integer.parseInt(controllerInputs[16]) == 1;
+        DRight = Integer.parseInt(controllerInputs[17]) == 1;
+        DUp = Integer.parseInt(controllerInputs[18]) == 1;
+        DDown = Integer.parseInt(controllerInputs[19]) == 1;
     }
     
     public String serialize(){
