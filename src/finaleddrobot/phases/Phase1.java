@@ -26,7 +26,7 @@ public class Phase1 {
     private static void loop(){
         System.out.println("In Phase 1");
         try {
-            localState = Resources.m_arduino.slaveSyncState();
+            //localState = Resources.m_arduino.slaveSyncState();
         } catch (Exception ex) {
             localState = -9001;
         }

@@ -24,6 +24,8 @@ import java.io.IOException;
  */
 public class Resources {
     
+    public static boolean isTeleopEnabled = true;
+    public static boolean isEnabled = true;
     public static TerminalExecutor m_exec;
     public static TMP102 m_tmp102;
     public static HIH6130 m_hih6130;

@@ -8,6 +8,7 @@ package finaleddrobot.phases;
 import finaleddrobot.FinalEDDRobot;
 import finaleddrobot.actuators.StepperMotor;
 import finaleddrobot.resources.Resources;
+import finaleddrobot.utility.MathUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +19,13 @@ import java.util.logging.Logger;
 public class UserPhase {
     
     
-    public static double leftDrive = 1480;
-    public static double rightDrive = 1480;
-    public static byte driveMode = 1;
-    public static final byte maxDriveModes = 2;
+    private static double leftDrive = 1480;
+    private static double rightDrive = 1480;
+    private static byte driveMode = 1;
+    private static final byte maxDriveModes = 2;
     public static boolean isAutoPhaseEnabled = false;
-    public static boolean isEnabled = true;
+    private static double[] input = new double[2];
+    private static int[] output = new int[2];
     
     private static void loop(){
         
@@ -57,6 +59,7 @@ public class UserPhase {
         if(Resources.m_controller.getTriangleButtonPressed()){
             //enable or disable auto phases
             System.out.println("Triangle Pressed");
+            Resources.isTeleopEnabled = !Resources.isTeleopEnabled;
         }
         if(Resources.m_controller.getSquareButton()){
             //open hatch
@@ -65,32 +68,32 @@ public class UserPhase {
         }
         if(Resources.m_controller.getDUpPressed()){
             //increment auto phase up
-            System.out.println("D Up Pressed");
             FinalEDDRobot.autophase++;
+            System.out.println("D Up Pressed... Autophase = " + FinalEDDRobot.autophase);
             if(FinalEDDRobot.autophase == 7){
                 FinalEDDRobot.autophase = 0;
             }
         }
         if(Resources.m_controller.getDLeftPressed()){
             //increment auto phase down
-            System.out.println("D Left Pressed");
             FinalEDDRobot.autophase--;
+            System.out.println("D Left Pressed... Autophase = " + FinalEDDRobot.autophase);
             if(FinalEDDRobot.autophase == -1){
                 FinalEDDRobot.autophase = 6;
             }
         }
         if(Resources.m_controller.getDDownPressed()){
             //increment auto phase down
-            System.out.println("D Down Pressed");
             FinalEDDRobot.autophase--;
+            System.out.println("D Down Pressed... Autophase = " + FinalEDDRobot.autophase);
             if(FinalEDDRobot.autophase == -1){
                 FinalEDDRobot.autophase = 6;
             }
         }
         if(Resources.m_controller.getDRightPressed()){
             //increment auto phase up
-            System.out.println("D Right Pressed");
             FinalEDDRobot.autophase++;
+            System.out.println("D Right Pressed... Autophase = " + FinalEDDRobot.autophase);
             if(FinalEDDRobot.autophase == 7){
                 FinalEDDRobot.autophase = 0;
             }            
@@ -102,17 +105,20 @@ public class UserPhase {
             System.out.println("Right Joy Down");
         }
         if(Resources.m_controller.getStartButtonPressed()){
-            //pause
-            System.out.println("Start Button Pressed");
-            isEnabled = !isEnabled;
+            Resources.isEnabled = !Resources.isEnabled;
+            if(Resources.isEnabled){
+                System.out.println("Unpaused");
+            }else{
+                System.out.println("Paused");
+            }
         }
         if(Resources.m_controller.getSelectButtonPressed()){
             //change controller or drive mode
-            System.out.println("Select Button Pressed");
             driveMode++;
             if(driveMode > maxDriveModes){
                 driveMode = 1;
             }
+            System.out.println("Select Button Pressed... Drive Mode = " + driveMode);
         }
         if(Resources.m_controller.getL2()){
             System.out.println("L2 Down");
@@ -120,30 +126,65 @@ public class UserPhase {
         if(Resources.m_controller.getR2()){
             System.out.println("R2 Down");
         }
+        
         if(Resources.m_controller.getLeftXAxis() != Double.NaN){
             //System.out.println("Left X Axis" + Resources.m_controller.getLeftXAxis());
             //arcade drive rotate
+            if(driveMode == 2){
+                input[1] = Resources.m_controller.getLeftXAxis();
+            }
         }else{
-            
+            if(driveMode == 2){
+                input[1] = 0;
+            }
         }
         if(Resources.m_controller.getRightXAxis() != Double.NaN){
             //System.out.println("Right X Axis" + Resources.m_controller.getRightXAxis());
         }else{
-            
         }
         if(Resources.m_controller.getLeftYAxis() != Double.NaN){
             //left tank drive
+            if(driveMode == 1){
+                input[0] = Resources.m_controller.getLeftYAxis();
+            }
             //arcade drive forward
+            else if(driveMode == 2){
+                input[0] = Resources.m_controller.getLeftYAxis();
+            }
             //System.out.println("Left Y Axis" + Resources.m_controller.getLeftYAxis());
         }else{
-            
+            if(driveMode == 1){
+                input[0] = 0;
+            }
+            //arcade drive forward
+            else if(driveMode == 2){
+                input[0] = 0;
+            }
         }
         if(Resources.m_controller.getRightYAxis() != Double.NaN){
             //right tank drive
+            if(driveMode == 1){
+                input[1] = Resources.m_controller.getRightYAxis();
+            }
             //System.out.println("Right Y Axis" + Resources.m_controller.getRightYAxis());
         }else{
-            
+            if(driveMode == 1){
+                input[1] = 0;
+            }
         }
+        
+        
+        if(driveMode == 1){
+            double[] normalizedInput = MathUtil.normalize(input);
+            output[0] = (int) MathUtil.threshhold(1480 - normalizedInput[0]*280);
+            output[1] = (int) MathUtil.threshhold(1480 + normalizedInput[1]*280);
+        }else if(driveMode == 2){
+            double[] normalizedInput = MathUtil.normalize(input, false);
+            output[0] = (int) MathUtil.threshhold(1480 - input[0]*280 - input[1]*280);
+            output[1] = (int) MathUtil.threshhold(1480 + input[0]*280 - input[1]*280);
+        }
+        
+        System.out.println(output[0] + "," + output[1]);
     }
 
     public static void update() {
@@ -156,5 +197,27 @@ public class UserPhase {
         }
     }
     
+    public static String serializeOutput(){
+        String serializedString = "";
+        serializedString += output[0]     + ",";
+        serializedString += output[1]    + ",";
+        serializedString += (Resources.m_controller.getL1()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getR1()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getL2()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getR2()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getStartButton()? 1 : 0)     + ",";
+        serializedString += (Resources.m_controller.getSelectButton()? 1 : 0)     + ",";
+        serializedString += (Resources.m_controller.getCircleButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getXButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getTriangleButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getSquareButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getLeftJoyButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getRightJoyButton()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getDLeft()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getDRight()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getDUp()? 1 : 0)   + ",";
+        serializedString += (Resources.m_controller.getDDown() ? 1 : 0);
+        return serializedString;
+    }
     
 }
