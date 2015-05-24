@@ -69,6 +69,10 @@ public class Arduino {
         return true;
     }
     
+    public void writeData(String data) throws IOException{
+        m_arduino.write(data);
+    }
+    
     public boolean stopDataMode() throws IOException{
         dataPhase = false;
         m_arduino.write("-1");

@@ -52,7 +52,7 @@ public class Resources {
 //        m_liveFeed.start();
         m_missionControl = new Socket("127.0.0.1", 9001);
         m_controller = new SerialPS3Controller();
-//        m_arduino = new Arduino("/dev/ttyUSB0");
+        m_arduino = new Arduino("/dev/ttyUSB0");
 //        m_pn532 = new PN532();
 //        m_mifareStringBuilder = new MiFareStringBuilder();
     }

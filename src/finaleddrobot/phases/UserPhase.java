@@ -9,6 +9,7 @@ import finaleddrobot.FinalEDDRobot;
 import finaleddrobot.actuators.StepperMotor;
 import finaleddrobot.resources.Resources;
 import finaleddrobot.utility.MathUtil;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ public class UserPhase {
     private static double[] input = new double[2];
     private static int[] output = new int[2];
     
-    private static void loop(){
+    private static void loop() throws IOException{
         
         System.out.println("In User Phase");
         
@@ -49,12 +50,12 @@ public class UserPhase {
         if(Resources.m_controller.getCircleButton()){
             //drill ccw
             System.out.println("Circle Down");
-            Resources.m_drill.oneStep(StepperMotor.Direction.Backward);
+//            Resources.m_drill.oneStep(StepperMotor.Direction.Backward);
         }
         if(Resources.m_controller.getXButton()){
             //drill cw
             System.out.println("X Down");
-            Resources.m_drill.oneStep(StepperMotor.Direction.Forward);
+//            Resources.m_drill.oneStep(StepperMotor.Direction.Forward);
         }
         if(Resources.m_controller.getTriangleButtonPressed()){
             //enable or disable auto phases
@@ -64,7 +65,7 @@ public class UserPhase {
         if(Resources.m_controller.getSquareButton()){
             //open hatch
             System.out.println("Square Down");
-            Resources.m_hatch.oneStep(StepperMotor.Direction.Forward);
+//            Resources.m_hatch.oneStep(StepperMotor.Direction.Forward);
         }
         if(Resources.m_controller.getDUpPressed()){
             //increment auto phase up
@@ -185,22 +186,23 @@ public class UserPhase {
         }
         
         System.out.println(output[0] + "," + output[1]);
+        Resources.m_arduino.writeData(serializeOutput());
     }
 
-    public static void update() {
+    public static void update() throws IOException {
         loop();
         
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(UserPhase.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            Thread.sleep(250);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(UserPhase.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     public static String serializeOutput(){
-        String serializedString = "";
+        String serializedString = (-3) + ",";
         serializedString += output[0]     + ",";
-        serializedString += output[1]    + ",";
+        serializedString += output[1]   + "," ;
         serializedString += (Resources.m_controller.getL1()? 1 : 0)   + ",";
         serializedString += (Resources.m_controller.getR1()? 1 : 0)   + ",";
         serializedString += (Resources.m_controller.getL2()? 1 : 0)   + ",";
@@ -216,7 +218,7 @@ public class UserPhase {
         serializedString += (Resources.m_controller.getDLeft()? 1 : 0)   + ",";
         serializedString += (Resources.m_controller.getDRight()? 1 : 0)   + ",";
         serializedString += (Resources.m_controller.getDUp()? 1 : 0)   + ",";
-        serializedString += (Resources.m_controller.getDDown() ? 1 : 0);
+        serializedString += (Resources.m_controller.getDDown() ? 1 : 0) + ",";
         return serializedString;
     }
     
