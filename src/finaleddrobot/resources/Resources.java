@@ -43,17 +43,17 @@ public class Resources {
     
     public static void init() throws IOException{
         m_exec = new TerminalExecutor();
-//        m_tmp102 = new TMP102();
-//        m_hih6130 = new HIH6130();
-//        m_bmp180 = new BMP180();
-//        m_drill = new Drill(-9001, -9001, -9001, -9001, -9001, -9001);
-//        m_hatch = new Hatch(-9001, -9001, -9001, -9001);
+        m_tmp102 = new TMP102();
+        m_hih6130 = new HIH6130();
+        m_bmp180 = new BMP180();
+        m_drill = new Drill(-9001, -9001, -9001, -9001, -9001, -9001);
+        m_hatch = new Hatch(-9001, -9001, -9001, -9001);
 //        m_liveFeed = new LiveFeed();
 //        m_liveFeed.start();
         m_missionControl = new Socket("127.0.0.1", 9001);
         m_controller = new SerialPS3Controller();
         m_arduino = new Arduino("/dev/ttyUSB0");
-//        m_pn532 = new PN532();
-//        m_mifareStringBuilder = new MiFareStringBuilder();
+        m_pn532 = new PN532();
+        m_mifareStringBuilder = new MiFareStringBuilder();
     }
 }

@@ -11,4 +11,12 @@ package missioncontrol.packets;
  */
 public class RaspberryPiPacket {
     
+    private String data = "";
+    public RaspberryPiPacket(String serializedData){
+        data = serializedData + "\n";
+    }
+    
+    public String getRawData(){
+        return data;
+    }
 }

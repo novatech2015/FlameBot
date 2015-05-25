@@ -39,9 +39,9 @@ public class ServerSocket {
     }
 
     //Get String from Raspberry Pi
-    public RaspberryPiPacket getIncoming() {
-        RaspberryPiPacket packet = null;
-
+    public RaspberryPiPacket getIncoming() throws IOException {
+        RaspberryPiPacket packet = new RaspberryPiPacket(is.readLine());
+        
         return packet;
     }
 

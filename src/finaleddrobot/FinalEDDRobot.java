@@ -128,12 +128,12 @@ public class FinalEDDRobot{
     
     
     private static void syncState(byte autophase) throws IOException{
-//        Resources.m_arduino.stopDataMode();
-//        try {
-//            Resources.m_arduino.syncState(autophase);
-//        } catch (Exception ex) {
-//            Logger.getLogger(FinalEDDRobot.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
+        Resources.m_arduino.stopDataMode();
+        try {
+            Resources.m_arduino.syncState(autophase);
+        } catch (Exception ex) {
+            Logger.getLogger(FinalEDDRobot.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }    
 }

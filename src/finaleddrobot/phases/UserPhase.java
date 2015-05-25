@@ -6,12 +6,14 @@
 package finaleddrobot.phases;
 
 import finaleddrobot.FinalEDDRobot;
+import finaleddrobot.MasterRobot;
 import finaleddrobot.actuators.StepperMotor;
 import finaleddrobot.resources.Resources;
 import finaleddrobot.utility.MathUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import missioncontrol.packets.RaspberryPiPacket;
 
 /**
  * Start Phase
@@ -50,12 +52,12 @@ public class UserPhase {
         if(Resources.m_controller.getCircleButton()){
             //drill ccw
             System.out.println("Circle Down");
-//            Resources.m_drill.oneStep(StepperMotor.Direction.Backward);
+            Resources.m_drill.oneStep(StepperMotor.Direction.Backward);
         }
         if(Resources.m_controller.getXButton()){
             //drill cw
             System.out.println("X Down");
-//            Resources.m_drill.oneStep(StepperMotor.Direction.Forward);
+            Resources.m_drill.oneStep(StepperMotor.Direction.Forward);
         }
         if(Resources.m_controller.getTriangleButtonPressed()){
             //enable or disable auto phases
@@ -65,7 +67,7 @@ public class UserPhase {
         if(Resources.m_controller.getSquareButton()){
             //open hatch
             System.out.println("Square Down");
-//            Resources.m_hatch.oneStep(StepperMotor.Direction.Forward);
+            Resources.m_hatch.oneStep(StepperMotor.Direction.Forward);
         }
         if(Resources.m_controller.getDUpPressed()){
             //increment auto phase up
@@ -187,6 +189,8 @@ public class UserPhase {
         
         System.out.println(output[0] + "," + output[1]);
         Resources.m_arduino.writeData(serializeOutput());
+        String data = MasterRobot.grabAllData();
+        Resources.m_missionControl.sendPacket(new RaspberryPiPacket(data));
     }
 
     public static void update() throws IOException {

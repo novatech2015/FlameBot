@@ -44,6 +44,7 @@ public class Socket {
     
     //Send String to Mission Control
     public void sendPacket(RaspberryPiPacket packet){
-        
+        os.write(packet.getRawData());
+        os.flush();
     }
 }
